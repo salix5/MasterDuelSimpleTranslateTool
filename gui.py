@@ -33,7 +33,7 @@ class App():
         self.start_button = tk.Button(
             master=self.control_area,
             font=(self.font, BUTTON_FONT_SIZE),
-            text="开始",
+            text="開始",
             width=10,
             height=1,
             bg=BLUE,
@@ -43,7 +43,7 @@ class App():
         self.mode_button = tk.Button(
             master=self.control_area,
             font=(self.font, BUTTON_FONT_SIZE),
-            text="切换至决斗",
+            text="切換至決鬥",
             width=10,
             height=1,
             bg=BLUE,
@@ -138,22 +138,22 @@ class App():
 
     def pause(self):
         search.pause()
-        self.start_button.configure(text="继续")
+        self.start_button.configure(text="繼續")
         self.is_paused = True
 
     def unpause(self):
         search.unpause()
-        self.start_button.configure(text="暂停")
+        self.start_button.configure(text="暫停")
         self.is_paused = False
 
     def switch_mode(self):
         if self.duel_mode:
             search.switch_mode()
-            self.mode_button.configure(text="切换至组卡")
+            self.mode_button.configure(text="切換到組牌")
             self.duel_mode = False
         else:
             search.switch_mode()
-            self.mode_button.configure(text="切换至决斗")
+            self.mode_button.configure(text="切換到決鬥")
             self.duel_mode = True
         self.unpause()
 
