@@ -152,10 +152,10 @@ def get_game_window_info():
 def window_shot_image(hwnd:int):
     app = win32gui.GetWindowText(hwnd)
     if not hwnd or hwnd<=0 or len(app)==0:
-        return False,'无法找到游戏进程,不进行操作'
+        return False,'無法找到遊戲進程，不進行操作'
     isiconic=win32gui.IsIconic(hwnd)
     if isiconic:
-        return False,'游戏处于最小化窗口状态,无法获取屏幕图像,不执行操作'
+        return False,'遊戲處於最小化窗口狀態，無法獲取屏幕圖像，不執行操作'
     
     left, top, right, bot = win32gui.GetClientRect(hwnd)
     
@@ -198,8 +198,8 @@ def window_shot_image(hwnd:int):
     mfcDC.DeleteDC()
     win32gui.ReleaseDC(hwnd, hwndDC)
     if result != 1:
-        return False,"无法创建屏幕图像缓存"
-    print(f"Win32返回的游戏窗口分辨率({w}x{h}),桌面长宽缩放倍率({desktop_global_resize_w_zoom},{desktop_global_resize_h_zoom})，相关坐标将会进行缩放，缩放比率将为({w/1920/desktop_global_resize_w_zoom},{h/1080/desktop_global_resize_h_zoom})")
+        return False,"無法創建螢幕圖像緩存"
+    #print(f"Win32返回的遊戲窗口分辨率({w}x{h})，桌面長寬縮放倍率({desktop_global_resize_w_zoom},{desktop_global_resize_h_zoom})，相關座標將會進行縮放，縮放比率將為({w/1920/desktop_global_resize_w_zoom},{h/1080/desktop_global_resize_h_zoom})")
     return True,{
         "image":im,
         "current_window_zoom":(w/1920/desktop_global_resize_w_zoom,h/1080/desktop_global_resize_h_zoom),
@@ -291,18 +291,18 @@ def cv_card_info_at_duel_room(debug:bool=False):
 
 def translate(type:int,cache:list,debug:bool=False):
     if cache is None or len(cache)==0:
-        print("无法读取图像指纹信息,不执行操作(card_image_check.db是不是12K，是的话这是个空库没数据的)")
+        print("無法讀取圖像指紋信息，不執行操作 (card_image_check.db的大小為12K表示空資料庫)")
         return
     cls()
     start_time=time.time()
     if type==1:
-        print("翻译卡组卡片")
+        print("翻譯牌組卡片\n")
         dhash_info=cv_card_info_at_deck_room(debug)
     elif type==2:
-        print("翻译决斗卡片")
+        print("翻譯決鬥卡片\n")
         dhash_info=cv_card_info_at_duel_room(debug)
     else:
-        print("not support")
+        print("not support\n")
         return
     if not dhash_info:
         return
@@ -328,7 +328,7 @@ def translate(type:int,cache:list,debug:bool=False):
         try:
             cursor = ygo_sql.execute(f"SELECT name,desc from texts WHERE id='{card['card']}' LIMIT 1")
         except:
-            print("读取ygo数据库异常,是不是没有将card.cdb放进来")
+            print("讀取ygo數據庫異常，可能是缺少card.cdb")
             return
         if cursor.arraysize!=1:
             print(f"card {card['card']} not found")
@@ -338,20 +338,20 @@ def translate(type:int,cache:list,debug:bool=False):
         card['name']=data[0]
         card['desc']=data[1]
     ygo_sql.close()
-    print('匹配用时: %.6f 秒'%(end_time-start_time))
-    print(f"识别结果【匹配概率由高到低排序】")
+    #print('耗時: %.6f 秒'%(end_time-start_time))
+    #print(f"識別結果【匹配機率由高到低排序】")
     for card in results:
         if card['score']<0.93:
-            print("警告:相似度匹配过低,可能游戏卡图与缓存库的版本卡图不同或未知原因截图区域错误\n修改enable_debug查看截取图片信息分析原因\n")
-        print(f"{card['name']}(密码:{card['card']},相似度:{card['score']})\n{card['desc']}\n")
+            print("警告：相似度匹配過低，可能是遊戲卡圖與緩存庫的版本不同，或未知原因截圖區域錯誤\n修改enable_debug查看截取圖片信息分析原因\n")
+        print(f"{card['name']} ({card['card']},相似度:{round(card['score'], 2)})\n\n{card['desc']}\n")
     print("-----------------------------------")
-    print("shift+g翻译卡组卡片,shift+f翻译决斗中卡片,ctrl+q关闭\n请确保您已经点开了目标卡片的详细信息!!!")
+    print("shift+F：翻譯決鬥中卡片\nshift+G：翻譯牌組卡片\nctrl+Q：關閉\n請確認已點選目標卡片。")
         
 if __name__ == '__main__':
     cache=get_image_db_cache()
     enable_debug=False
-    print("shift+g翻译卡组卡片,shift+f翻译决斗中卡片,ctrl+q关闭\n请确保您已经点开了目标卡片的详细信息!!!")
+    print("shift+F：翻譯決鬥中卡片\nshift+G：翻譯牌組卡片\nctrl+Q：關閉\n請確認已點選目標卡片。")
     keyboard.add_hotkey('shift+g',translate,args=(1,cache,enable_debug))
     keyboard.add_hotkey('shift+f',translate,args=(2,cache,enable_debug))
     keyboard.wait('ctrl+q')
-    print("程序结束")
+    print("程序結束")
