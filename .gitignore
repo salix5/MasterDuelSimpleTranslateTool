@@ -9,7 +9,6 @@ pics/*
 build
 dist
 *.spec
-*.cdb
 *.png
 *.jpg
 *.rar
